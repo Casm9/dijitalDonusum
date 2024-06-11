@@ -33,9 +33,6 @@ const questions = ref([
     ],
     selected: null
   },
-
-
-
 ])
 
 const quizCompleted = ref(false)
@@ -68,17 +65,15 @@ const NextQuestion = () => {
   <main class="app">
     <h1>Dijital Dönüşüm</h1>
     <section class="quiz" v-if="!quizCompleted">
+
       <div class="quiz-info">
         <span class="question"> {{ getCurrentQuestion.question }}</span>
         <span class="question-length"> {{ questions.length }} </span>
       </div>
 
       <div class="options">
-        <label v-for="(option, index) in getCurrentQuestion.options" :key="index"
-          :class="`option ${getCurrentQuestion.selected == index ? index == getCurrentQuestion.answer ? 'correct' : '' : ''} ${getCurrentQuestion.selected != null && index != getCurrentQuestion.selected ? 'disabled' : ''}`">
-          <input type="radio" :name="getCurrentQuestion.index" :value="index" v-model="getCurrentQuestion.selected"
-            :disabled="getCurrentQuestion.selected" @change="SetAnswer">
-
+        <label v-for="(option, index) in getCurrentQuestion.options" :key="index" :class="`option ${getCurrentQuestion.selected == index ? index == getCurrentQuestion.answer ? 'correct' : '' : ''} ${getCurrentQuestion.selected != null && index != getCurrentQuestion.selected ? 'disabled' : ''}`">
+          <input type="radio" :name="getCurrentQuestion.index" :value="index" v-model="getCurrentQuestion.selected" :disabled="getCurrentQuestion.selected" @change="SetAnswer">
           <span>{{ option }}</span>
         </label>
       </div>
@@ -86,6 +81,7 @@ const NextQuestion = () => {
       <button @click="NextQuestion" :disabled="!getCurrentQuestion.selected">
         {{ getCurrentQuestion.index == questions.length - 1 ? 'Bitir' : getCurrentQuestion.selected == null ? 'Seçenek seç' : "Bir sonraki soru" }}
       </button>
+
     </section>
     <section v-else>
       <h2>Sorular Bitti.</h2>
@@ -94,7 +90,7 @@ const NextQuestion = () => {
 </template>
 
 <style>
-* { 
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -106,7 +102,7 @@ body {
   color: #FFF;
 }
 
-.app{
+.app {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -119,7 +115,7 @@ h1 {
   margin-bottom: 2rem;
 }
 
-.quiz{
+.quiz {
   background-color: #382a4b;
   padding: 1rem;
   width: 100%;
