@@ -3,8 +3,14 @@
         <Question :question="getCurrentQuestion" :setAnswer="setAnswer" />
         <button @click="nextQuestion" :disabled="getCurrentQuestion.selected === null">{{ 'Bir sonraki soru' }}</button>
     </section>
-    <section v-else>
-        <h2>Sorular Bitti.</h2>
+    <section v-else class="completed">
+        <h1 class="completed">İşini Dijitalde Büyüt</h1>
+        <h2 class="completed">BULUT ÇÖZÜMÜ</h2>
+        <p class="completed">Sanal Veri Merkezi</p>
+        <h2 class="completed">GÜVENLİK ÇÖZÜMÜ</h2>
+        <p class="completed">5651 Loglama</p>
+        <p class="completed">Firewall (Güvenlik Duvarı Servisleri)</p>
+        <p class="completed">DDOS</p>
     </section>
 </template>
 
@@ -12,6 +18,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { fetchQuestions } from '../services/api';
 import Question from './Question.vue';
+import Swal from 'sweetalert2'
 
 
 const questions = ref([]);
@@ -48,8 +55,14 @@ const setAnswer = (event) => {
 const nextQuestion = () => {
     if (currentQuestion.value < questions.value.length - 1) {
         currentQuestion.value++;
-    } else {
-        quizCompleted.value = true;
+    }
+    else {
+        Swal.fire({
+            title: "Tebrikler!",
+            text: "Testi başarı ile tamamladın.",
+            icon: "success",
+            confirmButtonText: "Tamam"
+        }).then(() => quizCompleted.value = true);
     }
 };
 </script>
