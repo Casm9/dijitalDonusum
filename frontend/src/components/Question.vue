@@ -9,7 +9,7 @@
                 :class="`option ${question.selected == index ? index == question.answer ? 'correct' : '' : ''} ${question.selected != null && index != question.selected ? 'disabled' : ''}`">
                 <input type="radio" :name="question.index" :value="index" v-model="question.selected"
                     :disabled="question.selected !== null" @change="setAnswer">
-                <span>{{ option }}</span>
+                <span>{{ option.replace(/\[|\]|"/g,"") }}</span>
             </label>
         </div>
     </div>
