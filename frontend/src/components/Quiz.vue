@@ -33,14 +33,15 @@ const getCurrentQuestion = computed(() => {
             index: 0
         };
     }
-    let question = questions.value[currentQuestion.value];
-    question.index = currentQuestion.value;
-    return question;
+    const question = questions.value[currentQuestion.value];
+    //question.index = currentQuestion.value;
+    //return question;
+    return { ...question, index: currentQuestion.value };
 });
 
 
 const setAnswer = (event) => {
-    questions.value[currentQuestion.value].selected = event.target.value;
+    questions.value[currentQuestion.value].selected = parseInt(event.target.value);
     event.target.value = null;
 };
 
