@@ -5,9 +5,9 @@
     </section>
     <section v-else class="completed">
         <h1 class="completed">{{ resultData.title }}</h1>
-      <h2 class="completed">{{ resultData.subtitle }}</h2>
-      <p class="copmpleted">{{ resultData.content }}</p>
-      <div class="completed" v-html="formattedContent"></div>
+        <h2 class="completed">{{ resultData.subtitle }}</h2>
+        <p class="copmpleted">{{ resultData.content }}</p>
+        <div class="completed" v-html="formattedContent"></div>
     </section>
 </template>
 
@@ -64,6 +64,6 @@ const nextQuestion = () => {
 };
 
 const formattedContent = computed(() => {
-  return resultData.value ? resultData.value.content.replace(/\n/g, '<br>') : '';
+    return resultData.value ? resultData.value.content.replace(/\n/g, '<br>') : '';
 });
 </script>

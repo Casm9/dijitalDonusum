@@ -28,6 +28,7 @@ sequelize.sync({ force: true }).then(async () => {
   for (const questionData of questionsData) {
     const { options, ...questionDetails } = questionData;
     const question = await Question.create(questionDetails);
+
     await Option.bulkCreate(
       options.map(option_text => ({ option_text, question_id: question.id }))
     );
@@ -52,17 +53,17 @@ app.get('/api/questions', async (req, res) => {
       }]
     });
 
-    
+
     res.header("Access-Control-Allow-Origin", "*");
     res.json(questions);
-    
+
   } catch (error) {
     console.error('Error fetching questions:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
-app.get('/api/result', async (req,res) => {
+app.get('/api/result', async (req, res) => {
   try {
     const result = await Result.findOne();
     res.header("Access-Control-Allow-Origin", "*");

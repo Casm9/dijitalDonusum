@@ -8,13 +8,13 @@ export async function fetchQuestions() {
 
         const data = await response.json();
 
-      
+
         return data.map(question => ({
             ...question,
             options: question.options.map(option => option.option_text)
         }));
-        
-        
+
+
     } catch (error) {
         console.error('Error fetching questions:', error);
         return [];
@@ -27,9 +27,9 @@ export async function fetchResult() {
         if (!response.ok) throw new Error('Network response was not ok');
 
         return await response.json();
-        
-      } catch (error) {
+
+    } catch (error) {
         console.error('Error fetching template:', error);
         return null;
-      }
+    }
 }
