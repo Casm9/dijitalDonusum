@@ -1,9 +1,9 @@
-import { API_URL } from '../config';
+import { API_URL_QUESTIONS, API_URL_RESULT } from '../config';
 
 export async function fetchQuestions() {
     try {
 
-        const response = await fetch(API_URL);
+        const response = await fetch(API_URL_QUESTIONS);
         if (!response.ok) throw new Error('Network response was not ok');
 
         const data = await response.json();
@@ -19,4 +19,17 @@ export async function fetchQuestions() {
         console.error('Error fetching questions:', error);
         return [];
     }
+}
+
+export async function fetchResult() {
+    try {
+        const response = await fetch(API_URL_RESULT);
+        if (!response.ok) throw new Error('Network response was not ok');
+
+        return await response.json();
+        
+      } catch (error) {
+        console.error('Error fetching template:', error);
+        return null;
+      }
 }

@@ -4,19 +4,16 @@
         <button @click="nextQuestion" :disabled="getCurrentQuestion.selected === null">{{ 'Bir sonraki soru' }}</button>
     </section>
     <section v-else class="completed">
-        <h1 class="completed">İşini Dijitalde Büyüt</h1>
-        <h2 class="completed">BULUT ÇÖZÜMÜ</h2>
-        <p class="completed">Sanal Veri Merkezi</p>
-        <h2 class="completed">GÜVENLİK ÇÖZÜMÜ</h2>
-        <p class="completed">5651 Loglama</p>
-        <p class="completed">Firewall (Güvenlik Duvarı Servisleri)</p>
-        <p class="completed">DDOS</p>
+        <h1 class="completed">{{ resultData.title }}</h1>
+      <h2 class="completed">{{ resultData.subtitle }}</h2>
+      <p class="copmpleted">{{ resultData.content }}</p>
+      <div class="completed" v-html="formattedContent"></div>
     </section>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { fetchQuestions } from '../services/api';
+import { fetchQuestions, fetchResult } from '../services/api';
 import Question from './Question.vue';
 import Swal from 'sweetalert2'
 
@@ -24,10 +21,12 @@ import Swal from 'sweetalert2'
 const questions = ref([]);
 const quizCompleted = ref(false);
 const currentQuestion = ref(0);
+const resultData = ref(null);
 
 
 onMounted(async () => {
     questions.value = await fetchQuestions();
+    resultData.value = await fetchResult();
 });
 
 
@@ -63,4 +62,8 @@ const nextQuestion = () => {
         }).then(() => quizCompleted.value = true);
     }
 };
+
+const formattedContent = computed(() => {
+  return resultData.value ? resultData.value.content.replace(/\n/g, '<br>') : '';
+});
 </script>

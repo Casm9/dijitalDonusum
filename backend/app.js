@@ -1,6 +1,7 @@
 const express = require('express');
 const sequelize = require('./database/config');
 const { Question, Option } = require('./database/models');
+const Result = require('./database/models/Result');
 
 const app = express();
 
@@ -32,6 +33,12 @@ sequelize.sync({ force: true }).then(async () => {
     );
   }
 
+  await Result.create({
+    title: 'İşini Dijitalde Büyüt',
+    subtitle: 'BULUT ÇÖZÜMÜ',
+    content: 'Sanal Veri Merkezi\nGÜVENLİK ÇÖZÜMÜ\n5651 Loglama\nFirewall (Güvenlik Duvarı Servisleri)\nDDOS',
+  });
+
   console.log('Database seeded!');
 
 });
@@ -51,6 +58,19 @@ app.get('/api/questions', async (req, res) => {
     
   } catch (error) {
     console.error('Error fetching questions:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/api/result', async (req,res) => {
+  try {
+    const result = await Result.findOne();
+    res.header("Access-Control-Allow-Origin", "*");
+    res.json(result);
+
+  } catch (error) {
+
+    console.error('Error fetching template:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
