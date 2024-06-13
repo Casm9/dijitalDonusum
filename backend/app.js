@@ -1,12 +1,12 @@
 const express = require('express');
 const sequelize = require('./database/config');
-const Question = require('./database/models/Question');
+const { Question, Option } = require('./database/models');
 
 const app = express();
 
 
 sequelize.sync({ force: true }).then(async () => {
-  await Question.bulkCreate([
+  const questionsData = [
     {
       question: 'İşletmenizin çalışan sayısı hangi aralıktadır?',
       answer: 0,
@@ -22,18 +22,33 @@ sequelize.sync({ force: true }).then(async () => {
       answer: 1,
       options: ['Danışman', 'Eğitim', 'Finansman'],
     },
-  ]);
+  ];
+
+  for (const questionData of questionsData) {
+    const { options, ...questionDetails } = questionData;
+    const question = await Question.create(questionDetails);
+    await Option.bulkCreate(
+      options.map(option_text => ({ option_text, question_id: question.id }))
+    );
+  }
+
+  console.log('Database seeded!');
+
 });
 
 app.get('/api/questions', async (req, res) => {
   try {
-    const questions = await Question.findAll();
-    const formattedQuestions = questions.map(question => ({
-        ...question.toJSON(),
-        options: question.options.split(',')
-      }));
+    const questions = await Question.findAll({
+      include: [{
+        model: Option,
+        as: 'options'
+      }]
+    });
+
+    
     res.header("Access-Control-Allow-Origin", "*");
-    res.json(formattedQuestions);
+    res.json(questions);
+    
   } catch (error) {
     console.error('Error fetching questions:', error);
     res.status(500).json({ error: 'Internal Server Error' });

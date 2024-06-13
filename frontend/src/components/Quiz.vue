@@ -41,8 +41,6 @@ const getCurrentQuestion = computed(() => {
         };
     }
     const question = questions.value[currentQuestion.value];
-    //question.index = currentQuestion.value;
-    //return question;
     return { ...question, index: currentQuestion.value };
 });
 
