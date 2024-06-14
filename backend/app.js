@@ -1,9 +1,14 @@
 const express = require('express');
 const sequelize = require('./database/config');
+const cors = require('cors');
 const { Question, Option } = require('./database/models');
 const Result = require('./database/models/Result');
+const Form = require('./database/models/Form');
+
 
 const app = express();
+app.use(cors());
+app.use(express.json());
 
 
 sequelize.sync({ force: true }).then(async () => {
@@ -27,6 +32,7 @@ sequelize.sync({ force: true }).then(async () => {
 
   for (const questionData of questionsData) {
     const { options, ...questionDetails } = questionData;
+
     const question = await Question.create(questionDetails);
 
     await Option.bulkCreate(
@@ -66,11 +72,26 @@ app.get('/api/questions', async (req, res) => {
 app.get('/api/result', async (req, res) => {
   try {
     const result = await Result.findOne();
+
     res.header("Access-Control-Allow-Origin", "*");
     res.json(result);
 
   } catch (error) {
 
+    console.error('Error fetching template:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.post('/api/submit-form', async (req, res) => {
+  try {
+
+    res.header("Access-Control-Allow-Origin", "*");
+    const { name, surname, email, telno } = req.body;
+    const formSubmission = await Form.create({ name, surname, email, telno });
+    res.status(201).json({ success: true, formSubmission });
+
+  } catch (error) {
     console.error('Error fetching template:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
