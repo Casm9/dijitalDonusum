@@ -1,7 +1,7 @@
 <template>
     <section v-if="!quizCompleted">
         <Question :question="getCurrentQuestion" :setAnswer="setAnswer" />
-        <button @click="nextQuestion" :disabled="getCurrentQuestion.selected === null">{{ 'Bir sonraki soru' }}</button>
+        <v-btn color="success" @click="nextQuestion" :disabled="getCurrentQuestion.selected === null">{{ 'Bir sonraki soru' }}</v-btn>
     </section>
     <section v-else class="completed">
         <h1 class="completed">{{ resultData.title }}</h1>

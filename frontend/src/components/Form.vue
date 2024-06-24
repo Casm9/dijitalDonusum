@@ -1,29 +1,17 @@
 <template>
     <div class="form-container">
         <h2>Lütfen aşağıdaki şirket yetkilisi bilgilerini doldurunuz.</h2>
-        <form @submit.prevent="handleSubmit">
-            <div>
-                <label for="name">Ad:</label>
-                <input type="text" id="name" v-model="formData.name" required />
-                <span v-if="nameError" class="error">{{ nameError }}</span>
-            </div>
-            <div>
-                <label for="surname">Soyad:</label>
-                <input type="text" id="surname" v-model="formData.surname" required />
-                <span v-if="surnameError" class="error">{{ surnameError }}</span>
-            </div>
-            <div>
-                <label for="email">E-posta:</label>
-                <input type="email" id="email" v-model="formData.email" required />
-                <span v-if="emailError" class="error">{{ emailError }}</span>
-            </div>
-            <div>
-                <label for="telno">Telefon Numarası:</label>
-                <input type="tel" id="telno" v-model="formData.telno" required />
-                <span v-if="telnoError" class="error">{{ telnoError }}</span>
-            </div>
-            <button type="submit" :disabled="!isFormValid">Gönder</button>
-        </form>
+        <v-form @submit.prevent="handleSubmit">
+            <v-text-field label="Ad:" v-model="formData.name" :error-messages="nameError">
+            </v-text-field>
+            <v-text-field label="Soyad:" v-model="formData.surname" :error-messages="surnameError">
+            </v-text-field>
+            <v-text-field label="E-posta:" v-model="formData.email" :error-messages="emailError">
+            </v-text-field>
+            <v-text-field label="Telefon Numarası:" v-model="formData.telno" :error-messages="telnoError">
+            </v-text-field>
+            <v-btn color="success" type="submit" :disabled="!isFormValid">Gönder</v-btn>
+        </v-form>
     </div>
 </template>
 
