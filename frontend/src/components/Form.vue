@@ -1,17 +1,33 @@
 <template>
     <div class="form-container">
         <h2>Lütfen aşağıdaki şirket yetkilisi bilgilerini doldurunuz.</h2>
-        <v-form @submit.prevent="handleSubmit">
-            <v-text-field label="Ad:" v-model="formData.name" :error-messages="nameError">
-            </v-text-field>
-            <v-text-field label="Soyad:" v-model="formData.surname" :error-messages="surnameError">
-            </v-text-field>
-            <v-text-field label="E-posta:" v-model="formData.email" :error-messages="emailError">
-            </v-text-field>
-            <v-text-field label="Telefon Numarası:" v-model="formData.telno" :error-messages="telnoError">
-            </v-text-field>
-            <v-btn color="success" type="submit" :disabled="!isFormValid">Gönder</v-btn>
-        </v-form>
+        <section v-if="!firstFormCompleted">
+            <v-form @submit.prevent="submitFirstForm">
+                <v-text-field class="ma-0" label="Ad:" v-model="formData.name" :error-messages="nameError">
+                </v-text-field>
+                <v-text-field class="ma-0" label="Soyad:" v-model="formData.surname" :error-messages="surnameError">
+                </v-text-field>
+                <v-text-field class="ma-0" label="E-posta:" v-model="formData.email" :error-messages="emailError">
+                </v-text-field>
+                <v-text-field class="ma-0" label="Telefon Numarası:" v-model="formData.telno"
+                    :error-messages="telnoError">
+                </v-text-field>
+                <v-btn color="success" type="submit" :disabled="!isFormValid">İleri</v-btn>
+            </v-form>
+        </section>
+        <section v-else>
+            <v-form @submit.prevent="handleSubmit">
+                <v-text-field class="ma-0" label="Şirket:" v-model="formData.company">
+                </v-text-field>
+                <v-text-field class="ma-0" label="Çalışan Sayısı:" v-model="formData.numOfEmployees">
+                </v-text-field>
+                <v-text-field class="ma-0" label="Şirketin Faaliyet Süresi:" v-model="formData.companyActivityPeriod">
+                </v-text-field>
+                <v-text-field class="ma-0" label="Şirketinizin faaliyette bulunduğu sektörü belirtiniz:" v-model="formData.companySector">
+                </v-text-field>
+                <v-btn color="success" type="submit" :disabled="!isFormValid">Gönder</v-btn>
+            </v-form>
+        </section>
     </div>
 </template>
 
@@ -20,14 +36,19 @@ import { ref, computed } from 'vue';
 import { fetchSubmitForm } from '../services/api';
 import Swal from 'sweetalert2';
 
-
 const emit = defineEmits(['formSubmitted']);
+
+const firstFormCompleted = ref(false);
 
 const formData = ref({
     name: '',
     surname: '',
     email: '',
-    telno: ''
+    telno: '',
+    company: '',
+    numOfEmployees: '',
+    companyActivityPeriod: '',
+    companySector: ''
 });
 
 const nameError = computed(() => {
@@ -56,11 +77,19 @@ const isFormValid = computed(() => {
     return !nameError.value && !surnameError.value && !emailError.value;
 });
 
+const submitFirstForm = () => {
+    if (isFormValid.value) {
+    firstFormCompleted.value = true;
+  } else {
+    console.error('First form is invalid, cannot proceed.');
+  }
+};
+
 const submitForm = async () => {
     try {
         const response = await fetchSubmitForm(formData.value);
         if (response.success) {
-            formData.value = { name: '', surname: '', email: '', telno: '' };
+            formData.value = { name: '', surname: '', email: '', telno: '', company: '', numOfEmployees: '', companyActivityPeriod: '', companySector: '' };
         } else {
             Swal.fire({
                 title: "Hay aksi!",

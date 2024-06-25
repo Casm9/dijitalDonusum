@@ -87,8 +87,8 @@ app.post('/api/submit-form', async (req, res) => {
   try {
 
     res.header("Access-Control-Allow-Origin", "*");
-    const { name, surname, email, telno } = req.body;
-    const formSubmission = await Form.create({ name, surname, email, telno });
+    const { name, surname, email, telno, company, numOfEmployees, companyActivityPeriod, companySector } = req.body;
+    const formSubmission = await Form.create({ name, surname, email, telno, company, numOfEmployees, companyActivityPeriod, companySector });
     res.status(201).json({ success: true, formSubmission });
 
   } catch (error) {

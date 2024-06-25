@@ -18,6 +18,22 @@ const Form = sequelize.define('Form', {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    company: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    numOfEmployees: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    companyActivityPeriod: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    companySector: {
+        type: DataTypes.STRING,
+        allowNull: false
+    }
 });
 
 module.exports = Form;
