@@ -6,9 +6,9 @@
 
         <div class="options">
             <label v-for="(option, index) in question.options" :key="index"
-                :class="`option ${question.selected == index ? index == question.answer ? 'correct' : 'correct' : ''} ${question.selected != null && index != question.selected ? 'disabled' : ''}`">
+            :class="`option ${question.selected === index ? (question.selected === question.answer ? 'correct' : 'correct') : 'disabled'}`">
                 <input type="radio" :name="question.index" :value="index" v-model="question.selected"
-                    :disabled="question.selected !== null" @change="setAnswer">
+                    :disabled="question.selected !== null" @change="handleAnswerChange">
                 <span>{{ option }}</span>
             </label>
         </div>
@@ -16,10 +16,18 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
     question: Object,
     setAnswer: Function
 });
+
+const emit = defineEmits(['answer-updated']);
+
+const handleAnswerChange = (event) => {
+    props.setAnswer(event);
+    emit('answer-updated', props.question.id, parseInt(event.target.value));
+};
+
 </script>
