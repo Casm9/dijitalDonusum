@@ -8,7 +8,7 @@ const Question = sequelize.define('Question', {
   },
   answer: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: true,
   },
   selected: {
     type: DataTypes.INTEGER,
