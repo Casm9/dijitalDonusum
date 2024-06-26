@@ -15,17 +15,14 @@ sequelize.sync({ force: true }).then(async () => {
   const questionsData = [
     {
       question: 'İşletmenizin çalışan sayısı hangi aralıktadır?',
-      answer: 0,
       options: ['0-50', '51-200', '201+'],
     },
     {
       question: 'Hangi sektörde faaliyet gösteriyorsunuz?',
-      answer: 2,
       options: ['Üretim', 'Perakende', 'Hizmet', 'Diğer'],
     },
     {
       question: 'Dijital Dönüşüm sürecinizde en çok karşılaştığınız ihtiyaç hangisidir?',
-      answer: 1,
       options: ['Danışman', 'Eğitim', 'Finansman'],
     },
   ];
@@ -95,6 +92,32 @@ app.post('/api/submit-form', async (req, res) => {
     console.error('Error fetching template:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
+});
+
+app.put('/api/questions/:questionId', async (req, res) => {
+
+  try {
+    res.header("Access-Control-Allow-Origin", "*");
+
+    const questionId = parseInt(req.params.questionId);
+    const { selected } = req.body;
+
+    const updatedQuestion = await Question.update(
+      { selected },
+      { where: { id: questionId } }
+    );
+
+    if (updatedQuestion[0] === 1) {
+      res.status(200).json({ message: 'Selected value updated successfully' });
+    } else {
+      res.status(400).json({ error: 'Failed to update selected value' });
+    }
+
+  } catch (error) {
+    console.error('Error updating question:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+
 });
 
 app.listen(3001, () => console.log('Server listening on port 3001'));
