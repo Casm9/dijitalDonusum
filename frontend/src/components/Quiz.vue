@@ -1,6 +1,6 @@
 <template>
     <section v-if="!quizCompleted">
-        <Question :question="getCurrentQuestion" :setAnswer="setAnswer" />
+        <Question :question="getCurrentQuestion" :setAnswer="setAnswer" @answer-updated="updateSelectedOnBackend" />
         <v-btn color="success" @click="nextQuestion" :disabled="getCurrentQuestion.selected === null">{{ 'Bir sonraki soru' }}</v-btn>
     </section>
     <section v-else class="completed">
@@ -12,11 +12,14 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, defineProps, defineEmits  } from 'vue';
 import { fetchQuestions, fetchResult } from '../services/api';
+import { API_URL_QUESTIONS } from '../config.js';
 import Question from './Question.vue';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 
+
+const emit = defineEmits(['answer-updated']);
 
 const questions = ref([]);
 const quizCompleted = ref(false);
@@ -45,8 +48,11 @@ const getCurrentQuestion = computed(() => {
 
 
 const setAnswer = (event) => {
-    questions.value[currentQuestion.value].selected = parseInt(event.target.value);
-    event.target.value = null;
+
+    const selectedOptionIndex = parseInt(event.target.value);
+    questions.value[currentQuestion.value].selected = selectedOptionIndex;
+    //event.target.value = null;
+    updateSelectedOnBackend(questions.value[currentQuestion.value].id, selectedOptionIndex);
 };
 
 const nextQuestion = () => {
@@ -63,7 +69,28 @@ const nextQuestion = () => {
     }
 };
 
+const updateSelectedOnBackend = async (questionId, selectedOptionIndex) => {
+
+    try {
+        const response = await fetch(`${API_URL_QUESTIONS}/${questionId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ selected: selectedOptionIndex })
+        });
+
+        const data = await response.json();
+
+
+    } catch (error) {
+        console.error('Error updating selected value on backend:', error);
+    }
+
+};
+
 const formattedContent = computed(() => {
     return resultData.value ? resultData.value.content.replace(/\n/g, '<br>') : '';
 });
+
 </script>
