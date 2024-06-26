@@ -116,6 +116,7 @@ const handleSubmit = async () => {
                     icon: "success",
                     confirmButtonText: "Tamam"
                 });
+                //formId.value = response.formSubmission.id;
                 emit('formSubmitted');
                 console.log('Form submitted successfully');
             } else {
