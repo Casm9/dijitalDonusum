@@ -4,6 +4,7 @@ const cors = require('cors');
 const { Question, Option } = require('./database/models');
 const Result = require('./database/models/Result');
 const Form = require('./database/models/Form');
+const evaluateResult = require('./services/evaluateResult');
 
 
 const app = express();
@@ -37,11 +38,23 @@ sequelize.sync({ force: true }).then(async () => {
     );
   }
 
-  await Result.create({
-    title: 'İşini Dijitalde Büyüt',
-    subtitle: 'BULUT ÇÖZÜMÜ',
-    content: 'Sanal Veri Merkezi\nGÜVENLİK ÇÖZÜMÜ\n5651 Loglama\nFirewall (Güvenlik Duvarı Servisleri)\nDDOS',
-  });
+  await Result.bulkCreate([
+    {
+      title: 'İşini Dijitalde Büyüt',
+      subtitle: 'Bulut Çözümü',
+      content: 'Sanal Veri Merkezi\nGüvenlik Çözümü\n5651 Loglama\nFirewall (Güvenlik Duvarı Servisleri)\nDDOS',
+    },
+    {
+      title: 'Yeni Dijital Dönüşüm Çözümü',
+      subtitle: 'İş Akışı Yönetimi',
+      content: 'Proje Yönetimi\nSüreç Otomasyonu\nE-doküman Yönetimi\nMobil Uygulama'
+    },
+    {
+      title: 'Genel Çözüm',
+      subtitle: 'Genel Çözüm Önerileri',
+      content: 'Web Destek\nCanlı Destek\nMüşteri Hizmetleri'
+    }
+  ]);
 
   console.log('Database seeded!');
 
@@ -118,6 +131,20 @@ app.put('/api/questions/:questionId', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 
+});
+
+
+app.post('/api/evaluate', async (req, res) => {
+  try {
+    res.header("Access-Control-Allow-Origin", "*");
+    const selectedOptions = req.body.selectedOptions;
+    const result = await evaluateResult(selectedOptions);
+    res.json(result);
+
+  } catch (error) {
+    console.error('Error evaluating result:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 app.listen(3001, () => console.log('Server listening on port 3001'));

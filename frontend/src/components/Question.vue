@@ -6,9 +6,9 @@
 
         <div class="options">
             <label v-for="(option, index) in question.options" :key="index"
-            :class="`option ${question.selected === index ? (question.selected === question.answer ? 'correct' : 'correct') : 'disabled'}`">
+            :class="`option ${question.selected === index ? (question.selected === question.answer ? 'correct' : 'correct') : ''}`">
                 <input type="radio" :name="question.index" :value="index" v-model="question.selected"
-                    :disabled="question.selected !== null" @change="handleAnswerChange">
+                     @change="handleAnswerChange">
                 <span>{{ option }}</span>
             </label>
         </div>

@@ -9,8 +9,7 @@
                 </v-text-field>
                 <v-text-field class="ma-0" label="E-posta:" v-model="formData.email" :error-messages="emailError">
                 </v-text-field>
-                <v-text-field class="ma-0" label="Telefon Numarası:" v-model="formData.telno"
-                    :error-messages="telnoError">
+                <v-text-field class="ma-0" label="Telefon Numarası:" v-model="formData.telno" :error-messages="telnoError">
                 </v-text-field>
                 <v-btn color="success" type="submit" :disabled="!isFormValid">İleri</v-btn>
             </v-form>

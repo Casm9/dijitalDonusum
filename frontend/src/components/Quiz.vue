@@ -12,8 +12,8 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, defineProps, defineEmits  } from 'vue';
-import { fetchQuestions, fetchResult } from '../services/api';
+import { ref, computed, onMounted, defineEmits  } from 'vue';
+import { fetchQuestions, fetchResult, evaluateSelectedOptions } from '../services/api';
 import { API_URL_QUESTIONS } from '../config.js';
 import Question from './Question.vue';
 import Swal from 'sweetalert2';
@@ -55,11 +55,14 @@ const setAnswer = (event) => {
     updateSelectedOnBackend(questions.value[currentQuestion.value].id, selectedOptionIndex);
 };
 
-const nextQuestion = () => {
+const nextQuestion = async () => {
     if (currentQuestion.value < questions.value.length - 1) {
         currentQuestion.value++;
     }
     else {
+        const selectedOptions = questions.value.map(q => q.options[q.selected]);
+        resultData.value = await evaluateSelectedOptions(selectedOptions);
+
         Swal.fire({
             title: "Tebrikler!",
             text: "Testi başarı ile tamamladın.",

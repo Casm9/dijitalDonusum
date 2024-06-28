@@ -1,4 +1,4 @@
-import { API_URL_QUESTIONS, API_URL_RESULT, API_URL_SUBMIT_FORM } from '../config';
+import { API_URL_QUESTIONS, API_URL_RESULT, API_URL_SUBMIT_FORM, API_URL_EVALUATE } from '../config';
 
 export async function fetchQuestions() {
   try {
@@ -49,5 +49,24 @@ export async function fetchSubmitForm(formData) {
   } catch (error) {
     console.error('Error submitting form:', error);
     return { success: false };
+  }
+}
+
+export async function evaluateSelectedOptions(selectedOptions) {
+  try {
+      const response = await fetch(API_URL_EVALUATE, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ selectedOptions }),
+      });
+      
+      if (!response.ok) throw new Error('Network response was not ok');
+      return await response.json();
+
+  } catch (error) {
+      console.error('Error evaluating selected options:', error);
+      return null;
   }
 }
