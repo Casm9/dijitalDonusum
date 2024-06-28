@@ -76,37 +76,19 @@ const isFormValid = computed(() => {
     return !nameError.value && !surnameError.value && !emailError.value;
 });
 
-const submitFirstForm = () => {
+const submitFirstForm = async () => {
     if (isFormValid.value) {
-    firstFormCompleted.value = true;
-  } else {
-    console.error('First form is invalid, cannot proceed.');
-  }
-};
-
-const submitForm = async () => {
-    try {
-        const response = await fetchSubmitForm(formData.value);
-        if (response.success) {
-            formData.value = { name: '', surname: '', email: '', telno: '', company: '', numOfEmployees: '', companyActivityPeriod: '', companySector: '' };
-        } else {
-            Swal.fire({
-                title: "Hay aksi!",
-                text: "Formu gönderirken bir hata oluştu.",
-                icon: "error",
-                confirmButtonText: "Tamam"
-            });
-        }
-    } catch (error) {
-        console.error('Error submitting form:', error);
+        firstFormCompleted.value = true;
+    } else {
+        console.error('First form is invalid, cannot proceed.');
     }
 };
-
 
 const handleSubmit = async () => {
     if (isFormValid.value) {
         try {
             const response = await fetchSubmitForm(formData.value);
+            emit('formSubmitted');
 
             if (response && response.success) {
                 Swal.fire({
@@ -115,10 +97,16 @@ const handleSubmit = async () => {
                     icon: "success",
                     confirmButtonText: "Tamam"
                 });
-                //formId.value = response.formSubmission.id;
-                emit('formSubmitted');
-                console.log('Form submitted successfully');
-            } else {
+
+            } else if (response.message === 'This email has already been used.') {
+                Swal.fire({
+                    title: "Uyarı!",
+                    text: "Bu e-posta adresi zaten kullanılmış.",
+                    icon: "warning",
+                    confirmButtonText: "Tamam"
+                });
+            }
+            else {
                 console.error('Form submission failed');
             }
         } catch (error) {

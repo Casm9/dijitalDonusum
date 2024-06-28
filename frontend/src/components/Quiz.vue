@@ -12,26 +12,20 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, defineEmits  } from 'vue';
-import { fetchQuestions, fetchResult, evaluateSelectedOptions } from '../services/api';
-import { API_URL_QUESTIONS } from '../config.js';
+import { ref, computed, onMounted } from 'vue';
+import { fetchQuestions, fetchResult, updateSelected, evaluateResult } from '../services/api';
 import Question from './Question.vue';
 import Swal from 'sweetalert2';
-
-
-const emit = defineEmits(['answer-updated']);
 
 const questions = ref([]);
 const quizCompleted = ref(false);
 const currentQuestion = ref(0);
 const resultData = ref(null);
 
-
 onMounted(async () => {
     questions.value = await fetchQuestions();
     resultData.value = await fetchResult();
 });
-
 
 const getCurrentQuestion = computed(() => {
     if (questions.value.length === 0 || !questions.value[currentQuestion.value]) {
@@ -46,13 +40,10 @@ const getCurrentQuestion = computed(() => {
     return { ...question, index: currentQuestion.value };
 });
 
-
 const setAnswer = (event) => {
-
     const selectedOptionIndex = parseInt(event.target.value);
     questions.value[currentQuestion.value].selected = selectedOptionIndex;
-    //event.target.value = null;
-    updateSelectedOnBackend(questions.value[currentQuestion.value].id, selectedOptionIndex);
+    updateSelected(questions.value[currentQuestion.value].id, selectedOptionIndex);
 };
 
 const nextQuestion = async () => {
@@ -61,7 +52,7 @@ const nextQuestion = async () => {
     }
     else {
         const selectedOptions = questions.value.map(q => q.options[q.selected]);
-        resultData.value = await evaluateSelectedOptions(selectedOptions);
+        resultData.value = await evaluateResult(selectedOptions);
 
         Swal.fire({
             title: "Tebrikler!",
@@ -70,26 +61,6 @@ const nextQuestion = async () => {
             confirmButtonText: "Tamam"
         }).then(() => quizCompleted.value = true);
     }
-};
-
-const updateSelectedOnBackend = async (questionId, selectedOptionIndex) => {
-
-    try {
-        const response = await fetch(`${API_URL_QUESTIONS}/${questionId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ selected: selectedOptionIndex })
-        });
-
-        const data = await response.json();
-
-
-    } catch (error) {
-        console.error('Error updating selected value on backend:', error);
-    }
-
 };
 
 const formattedContent = computed(() => {

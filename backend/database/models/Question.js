@@ -6,10 +6,6 @@ const Question = sequelize.define('Question', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  answer: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
-  },
   selected: {
     type: DataTypes.INTEGER,
     allowNull: true,

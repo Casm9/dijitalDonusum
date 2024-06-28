@@ -52,7 +52,7 @@ h1 {
 .option {
   display: block;
   padding: 1rem;
-  background-color: #F8F8FF;
+  background-color: #EAEAEA;
   margin-bottom: 0.5rem;
   border-radius: 0.5rem;
   cursor: pointer;
@@ -60,10 +60,10 @@ h1 {
 }
 
 .option:hover {
-  background-color: #EAEAEA;
+  background-color: #e4e4eb;
 }
 
-.option.correct {
+.option.green {
   background-color: #2cce7d;
 }
 

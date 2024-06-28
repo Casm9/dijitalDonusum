@@ -1,6 +1,6 @@
 const Result = require('../database/models/Result');
 
-async function evaluateResult(selectedOptions) {
+async function evaluateResults(selectedOptions) {
  
     if (selectedOptions.includes('Üretim')) {
         return await Result.findOne({ where: { title: 'İşini Dijitalde Büyüt' } });
@@ -11,4 +11,4 @@ async function evaluateResult(selectedOptions) {
     return await Result.findOne({ where: { title: 'Genel Çözüm' } });
 }
 
-module.exports = evaluateResult;
+module.exports = evaluateResults;

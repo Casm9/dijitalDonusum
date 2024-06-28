@@ -4,59 +4,60 @@ const cors = require('cors');
 const { Question, Option } = require('./database/models');
 const Result = require('./database/models/Result');
 const Form = require('./database/models/Form');
-const evaluateResult = require('./services/evaluateResult');
-
+const evaluateResults = require('./services/evaluateResults');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-
-sequelize.sync({ force: true }).then(async () => {
-  const questionsData = [
-    {
-      question: 'İşletmenizin çalışan sayısı hangi aralıktadır?',
-      options: ['0-50', '51-200', '201+'],
-    },
-    {
-      question: 'Hangi sektörde faaliyet gösteriyorsunuz?',
-      options: ['Üretim', 'Perakende', 'Hizmet', 'Diğer'],
-    },
-    {
-      question: 'Dijital Dönüşüm sürecinizde en çok karşılaştığınız ihtiyaç hangisidir?',
-      options: ['Danışman', 'Eğitim', 'Finansman'],
-    },
-  ];
-
-  for (const questionData of questionsData) {
-    const { options, ...questionDetails } = questionData;
-
-    const question = await Question.create(questionDetails);
-
-    await Option.bulkCreate(
-      options.map(option_text => ({ option_text, question_id: question.id }))
-    );
-  }
-
-  await Result.bulkCreate([
-    {
-      title: 'İşini Dijitalde Büyüt',
-      subtitle: 'Bulut Çözümü',
-      content: 'Sanal Veri Merkezi\nGüvenlik Çözümü\n5651 Loglama\nFirewall (Güvenlik Duvarı Servisleri)\nDDOS',
-    },
-    {
-      title: 'Yeni Dijital Dönüşüm Çözümü',
-      subtitle: 'İş Akışı Yönetimi',
-      content: 'Proje Yönetimi\nSüreç Otomasyonu\nE-doküman Yönetimi\nMobil Uygulama'
-    },
-    {
-      title: 'Genel Çözüm',
-      subtitle: 'Genel Çözüm Önerileri',
-      content: 'Web Destek\nCanlı Destek\nMüşteri Hizmetleri'
+sequelize.sync({ force: false }).then(async () => {
+  const questionsCount = await Question.count();
+  if(questionsCount === 0) {
+    const questionsData = [
+      {
+        question: 'İşletmenizin çalışan sayısı hangi aralıktadır?',
+        options: ['0-50', '51-200', '201+'],
+      },
+      {
+        question: 'Hangi sektörde faaliyet gösteriyorsunuz?',
+        options: ['Üretim', 'Perakende', 'Hizmet', 'Diğer'],
+      },
+      {
+        question: 'Dijital Dönüşüm sürecinizde en çok karşılaştığınız ihtiyaç hangisidir?',
+        options: ['Danışman', 'Eğitim', 'Finansman'],
+      },
+    ];
+  
+    for (const questionData of questionsData) {
+      const { options, ...questionDetails } = questionData;
+  
+      const question = await Question.create(questionDetails);
+  
+      await Option.bulkCreate(
+        options.map(option_text => ({ option_text, question_id: question.id }))
+      );
     }
-  ]);
-
-  console.log('Database seeded!');
+  
+    await Result.bulkCreate([
+      {
+        title: 'İşini Dijitalde Büyüt',
+        subtitle: 'Bulut Çözümü',
+        content: 'Sanal Veri Merkezi\nGüvenlik Çözümü\n5651 Loglama\nFirewall (Güvenlik Duvarı Servisleri)\nDDOS',
+      },
+      {
+        title: 'Yeni Dijital Dönüşüm Çözümü',
+        subtitle: 'İş Akışı Yönetimi',
+        content: 'Proje Yönetimi\nSüreç Otomasyonu\nE-doküman Yönetimi\nMobil Uygulama'
+      },
+      {
+        title: 'Genel Çözüm',
+        subtitle: 'Genel Çözüm Önerileri',
+        content: 'Web Destek\nCanlı Destek\nMüşteri Hizmetleri'
+      }
+    ]);
+  
+    console.log('Database seeded!');
+  }
 
 });
 
@@ -98,8 +99,15 @@ app.post('/api/submit-form', async (req, res) => {
 
     res.header("Access-Control-Allow-Origin", "*");
     const { name, surname, email, telno, company, numOfEmployees, companyActivityPeriod, companySector } = req.body;
+
+    const existingForm = await Form.findOne({ where: { email } });
+    if (existingForm) {
+      return res.status(400).json({ success: false, message: 'This email has already been used.' });
+    }
+
     const formSubmission = await Form.create({ name, surname, email, telno, company, numOfEmployees, companyActivityPeriod, companySector });
     res.status(201).json({ success: true, formSubmission });
+    
 
   } catch (error) {
     console.error('Error fetching template:', error);
@@ -133,12 +141,11 @@ app.put('/api/questions/:questionId', async (req, res) => {
 
 });
 
-
 app.post('/api/evaluate', async (req, res) => {
   try {
     res.header("Access-Control-Allow-Origin", "*");
     const selectedOptions = req.body.selectedOptions;
-    const result = await evaluateResult(selectedOptions);
+    const result = await evaluateResults(selectedOptions);
     res.json(result);
 
   } catch (error) {
