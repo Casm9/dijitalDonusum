@@ -1,5 +1,6 @@
 const Question = require('../database/models/Question');
 const Option = require('../database/models/Option');
+const Response = require('../database/models/Response');
 
 exports.getAllQuestions = async (req, res) => {
   try {
@@ -19,23 +20,37 @@ exports.getAllQuestions = async (req, res) => {
 };
 
 exports.updateQuestion = async (req, res) => {
-  try {
-    res.header("Access-Control-Allow-Origin", "*");
-    const questionId = parseInt(req.params.questionId);
-    const { selected } = req.body;
-    const updatedQuestion = await Question.update(
-      { selected },
-      { where: { id: questionId } }
-    );
+  const { id, selected, email } = req.body;
 
-    if (updatedQuestion[0] === 1) {
-      res.status(200).json({ message: 'Selected value updated successfully' });
+  try {
+    const question = await Question.findOne({
+        where: { id },
+        include: {
+            model: Response,
+            as: 'responses',
+            where: { email },
+            required: false
+        }
+    });
+
+    let response = question.responses.length ? question.responses[0] : null;
+
+    if (!response) {
+        response = await Response.create({
+            email,
+            selected,
+            QuestionId: id
+        });
+
     } else {
-      res.status(400).json({ error: 'Failed to update selected value' });
+        response.selected = selected;
+        await response.save();
     }
 
-  } catch (error) {
-    console.error('Error updating question:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
+    res.json({ message: 'Question updated successfully' });
+
+} catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+}
 };

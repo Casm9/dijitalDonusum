@@ -2,7 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const sequelize = require('./database/config');
 const seedDatabase = require('./seed/seedDatabase');
-
 const questionRoutes = require('./routes/questions');
 const resultRoutes = require('./routes/result');
 const formRoutes = require('./routes/form');

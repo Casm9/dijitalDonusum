@@ -88,8 +88,8 @@ const handleSubmit = async () => {
     if (isFormValid.value) {
         try {
             const response = await fetchSubmitForm(formData.value);
-            emit('formSubmitted');
-
+            emit('formSubmitted', formData.value.email);
+            
             if (response && response.success) {
                 Swal.fire({
                     title: "Tebrikler!",

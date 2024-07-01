@@ -1,6 +1,6 @@
 <template>
     <section v-if="!quizCompleted">
-        <Question :question="getCurrentQuestion" :setAnswer="setAnswer" @answer-updated="updateSelectedOnBackend" />
+        <Question :question="getCurrentQuestion" :setAnswer="setAnswer" />
         <v-btn color="success" @click="nextQuestion" :disabled="getCurrentQuestion.selected === null">{{ 'Bir sonraki soru' }}</v-btn>
     </section>
     <section v-else class="completed">
@@ -16,6 +16,13 @@ import { ref, computed, onMounted } from 'vue';
 import { fetchQuestions, fetchResult, updateSelected, evaluateResult } from '../services/api';
 import Question from './Question.vue';
 import Swal from 'sweetalert2';
+
+const props = defineProps({
+    userEmail: {
+        type: String,
+        required: true
+    }
+});
 
 const questions = ref([]);
 const quizCompleted = ref(false);
@@ -43,7 +50,7 @@ const getCurrentQuestion = computed(() => {
 const setAnswer = (event) => {
     const selectedOptionIndex = parseInt(event.target.value);
     questions.value[currentQuestion.value].selected = selectedOptionIndex;
-    updateSelected(questions.value[currentQuestion.value].id, selectedOptionIndex);
+    updateSelected(questions.value[currentQuestion.value].id, selectedOptionIndex, props.userEmail);
 };
 
 const nextQuestion = async () => {

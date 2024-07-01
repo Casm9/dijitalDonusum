@@ -5,8 +5,10 @@ import { ref } from 'vue';
 import './assets/style.css';
 
 const formSubmitted = ref(false);
+const userEmail = ref('');
 
-const handleFormSubmitted = () => {
+const handleFormSubmitted = (email) => {
+  userEmail.value = email;
   formSubmitted.value = true;
 };
 
@@ -16,6 +18,6 @@ const handleFormSubmitted = () => {
   <main class="app">
     <h1>Dijital Dönüşüm</h1>
     <Form v-if="!formSubmitted" @formSubmitted="handleFormSubmitted" />
-    <Quiz v-else />
+    <Quiz v-else :user-email="userEmail" />
   </main>
 </template>

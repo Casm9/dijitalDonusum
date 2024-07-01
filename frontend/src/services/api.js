@@ -52,7 +52,7 @@ export async function fetchSubmitForm(formData) {
   }
 };
 
-export async function updateSelected(questionId, selectedOptionIndex) {
+export async function updateSelected(questionId, selectedOptionIndex, email) {
 
   try {
       const response = await fetch(`${API_URL_QUESTIONS}/${questionId}`, {
@@ -60,11 +60,10 @@ export async function updateSelected(questionId, selectedOptionIndex) {
           headers: {
               'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ selected: selectedOptionIndex })
+          body: JSON.stringify({ id: questionId, selected: selectedOptionIndex, email })
       });
 
-      await response.json();
-
+     return await response.json();
 
   } catch (error) {
       console.error('Error updating selected value on backend:', error);
