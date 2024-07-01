@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config.js')
+const sequelize = require('../config.js');
+const Question = require('./Question');
 
 const Option = sequelize.define('Option', {
   option_text: {
@@ -14,5 +15,8 @@ const Option = sequelize.define('Option', {
     }
   }
 });
+
+Question.hasMany(Option, { as: 'options', foreignKey: 'question_id' });
+Option.belongsTo(Question, { foreignKey: 'question_id' });
 
 module.exports = Option;
