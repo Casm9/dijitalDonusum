@@ -6,13 +6,18 @@ const dbUser = 'root';
 const dbPassword = '';
 const dbHost = 'localhost';
 
-const createDatabaseIfNotExists = async () => {
-  const connection = await mysql.createConnection({ host: dbHost, user: dbUser, password: dbPassword });
-  await connection.promise().query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\`;`);
-  await connection.end();
-};
+(async () => {
+  try {
+    const connection = mysql.createConnection({ host: dbHost, user: dbUser, password: dbPassword });
+    await connection.promise().query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\`;`);
+    connection.end();
 
-createDatabaseIfNotExists();
+    console.log('Database created successfully.');
+
+  } catch (error) {
+    console.error('Error during database creation:', error);
+  }
+})();
 
 const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
   host: dbHost,
