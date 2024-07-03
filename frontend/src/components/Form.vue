@@ -4,7 +4,7 @@
             <v-row justify="center">
                 <v-col cols="12" md="12">
                     <v-card class="pa-4">
-                        <h2 class="text-center primary--text">Lütfen aşağıdaki şirket yetkilisi bilgilerini doldurunuz.
+                        <h2 class="text-center form-text">Lütfen aşağıdaki şirket yetkilisi bilgilerini doldurunuz.
                         </h2>
                         <section v-if="!firstFormCompleted">
                             <v-form @submit.prevent="submitFirstForm">
