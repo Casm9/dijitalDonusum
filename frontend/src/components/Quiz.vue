@@ -1,14 +1,23 @@
 <template>
-    <section v-if="!quizCompleted">
-        <Question :question="getCurrentQuestion" :setAnswer="setAnswer" />
-        <v-btn color="success" @click="nextQuestion" :disabled="getCurrentQuestion.selected === null">{{ 'Bir sonraki soru' }}</v-btn>
-    </section>
-    <section v-else class="completed">
-        <h1 class="completed">{{ resultData.title }}</h1>
-        <h2 class="completed">{{ resultData.subtitle }}</h2>
-        <p class="copmpleted">{{ resultData.content }}</p>
-        <div class="completed" v-html="formattedContent"></div>
-    </section>
+    <v-container>
+        <v-row justify="center">
+            <v-col cols="12" md="12">
+                <v-card class="pa-4">
+                    <section v-if="!quizCompleted">
+                        <Question :question="getCurrentQuestion" :setAnswer="setAnswer" />
+                        <v-btn color="success" @click="nextQuestion" :disabled="getCurrentQuestion.selected === null">{{ 'Bir sonraki soru' }}</v-btn>
+                    </section>
+                    <section v-else >
+                        <h1 class="text-center completed">{{ resultData.title }}</h1>
+                        <h2 class="completed">{{ resultData.subtitle }}</h2>
+                        <div class="completed" v-html="formattedDescription"></div>
+                        <ul class="completed" v-html="formattedContent"></ul>
+                    </section>
+                </v-card>
+            </v-col>
+        </v-row>
+    </v-container>
+
 </template>
 
 <script setup>
@@ -71,7 +80,16 @@ const nextQuestion = async () => {
 };
 
 const formattedContent = computed(() => {
-    return resultData.value ? resultData.value.content.replace(/\n/g, '<br>') : '';
+    if(!resultData.value) return '';
+
+    const items = resultData.value.content.split('\n');
+    const markedItems = items.map((item, index) => `<li>${index + 1}. ${item}</li>`);
+
+    return markedItems.join('');
+});
+
+const formattedDescription = computed(() => {
+    return resultData.value ? resultData.value.description.replace(/\n/g, '<br>') : '';
 });
 
 </script>
