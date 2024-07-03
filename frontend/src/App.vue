@@ -16,7 +16,7 @@ const handleFormSubmitted = (email) => {
 
 <template>
   <main class="app">
-    <h1>Dijital Dönüşüm</h1>
+    <h1 class="text-center primary--text">Dijital Dönüşüm</h1>
     <Form v-if="!formSubmitted" @formSubmitted="handleFormSubmitted" />
     <Quiz v-else :user-email="userEmail" />
   </main>
