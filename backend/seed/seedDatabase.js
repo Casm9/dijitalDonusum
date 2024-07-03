@@ -33,16 +33,19 @@ const seedDatabase = async () => {
         {
           title: 'İşini Dijitalde Büyüt',
           subtitle: 'Bulut Çözümü',
+          description: 'Dijital süreçlerinizi ve dönüşümünüzü birlikte planlamak,\nuygulamak ve daha da geliştirmek için hazırız! Detaylı\nbilgi almak, dijital dönüşüm hakkında merak ettikleriniz\niçin bizimle temasa geçin!',
           content: 'Sanal Veri Merkezi\nGüvenlik Çözümü\n5651 Loglama\nFirewall (Güvenlik Duvarı Servisleri)\nDDOS',
         },
         {
           title: 'Yeni Dijital Dönüşüm Çözümü',
           subtitle: 'İş Akışı Yönetimi',
+          description: 'Dijital süreçlerinizi ve dönüşümünüzü birlikte planlamak,\nuygulamak ve daha da geliştirmek için hazırız! Detaylı\nbilgi almak, dijital dönüşüm hakkında merak ettikleriniz\niçin bizimle temasa geçin!',
           content: 'Proje Yönetimi\nSüreç Otomasyonu\nE-doküman Yönetimi\nMobil Uygulama'
         },
         {
           title: 'Genel Çözüm',
-          subtitle: 'Genel Çözüm Önerileri',
+          subtitle: 'Genel Çözüm Önerileri Alt Başlık',
+          description: 'Dijital süreçlerinizi ve dönüşümünüzü birlikte planlamak,\nuygulamak ve daha da geliştirmek için hazırız! Detaylı\nbilgi almak, dijital dönüşüm hakkında merak ettikleriniz\niçin bizimle temasa geçin!',
           content: 'Web Destek\nCanlı Destek\nMüşteri Hizmetleri'
         }
       ]);
