@@ -16,7 +16,7 @@ Uygulamanın backend kısmını çalıştırmak için uygulamada backend klasör
 ```bash
 cd backend
 npm install
-cd database\models
+cd database
 node config.js
 cd ..
 node server.js
