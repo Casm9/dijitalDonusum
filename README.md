@@ -27,5 +27,5 @@ node server.js
 Kurulumu yaptıktan sonra internet tarayıcınızı açın ve aşağıdaki adrese gidin.
 
 ```bash
-[http:](http://localhost:5173/)
+http://localhost:5173/
 ```
